@@ -1,0 +1,103 @@
+### Create transaction
+< {%
+    const rate = parseFloat(client.global.get('moncash-rate'));
+    const settlementAmount = 8.5;
+    const receivingAmount = Math.round(settlementAmount * rate);
+
+    console.log('receivingAmount: ', receivingAmount);
+
+    request.variables.set('moncash-settlement-amount', settlementAmount.toString());
+    request.variables.set('moncash-receiving-amount', receivingAmount.toString());
+%}
+
+POST {{rg-host}}/api/transactions?allowInactiveDestinations=false
+Authorization: {{token_type}} {{access_token}}
+Content-Type: application/json
+api-version: {{transactions-api-version}}
+
+{
+  "mtoId": "IDT",
+  "client": "DIGICEL",
+  "deliveryMethod": {
+    "payerAlternativeId": "{{moncash-payer-id}}",
+    "type": "MobileWallet"
+  },
+
+  "trackingRef": "{{$random.alphanumeric(10)}}",
+  "mtoTransactionReference": "{{$random.alphanumeric(14)}}",
+
+  "sendingCurrency": "USD",
+  "sendingAmount": {{moncash-settlement-amount}},
+  "settlementAmount": {{moncash-settlement-amount}},
+  "usdSettlementAmount": {{moncash-settlement-amount}},
+  "receivingAmount": {{moncash-receiving-amount}},
+  "receivingCurrency": "HTG",
+  "buyRate": {{moncash-rate}},
+  "sellRate": {{moncash-rate}},
+
+
+  "agent": { "agentId": "RCQASTG" },
+  "sender": {
+    "id": "DIGICEL-retail-100000124039",
+    "country": "USA",
+    "email": "john.doe@test.com",
+    "state": "NY",
+    "firstName": "John",
+    "lastName": "Doe",
+    "birthDate": "2004-03-25T14:35:07.344Z",
+    "phoneNumber": "8858682845"
+  },
+  "recipient": {
+    "id": "DIGICEL-retail-100000124040",
+    "state": "CENTRE DEPARTMENT",
+    "country": "HTI",
+    "city": "HINCHE",
+    "phoneNumber": "{{moncash-phonenumber-success}}",
+    "email": "albert.nadere@test.com",
+    "firstName": "Albert",
+    "lastName": "Nadere"
+  }
+}
+
+> {%
+    const requestBody = JSON.parse(request.body());
+    const trackingRef = requestBody.trackingRef;
+    console.log('trackingRef: ', trackingRef);
+
+    const mtoTransactionReference = requestBody.mtoTransactionReference;
+    console.log('mtoTransactionReference: ', mtoTransactionReference);
+
+    const transactionId = response.body.transaction.id;
+    console.log('transactionId: ', transactionId);
+
+    client.global.set('trackingRef', trackingRef);
+    client.global.set('mtoTransactionReference', mtoTransactionReference);
+    client.global.set('transactionId', transactionId);
+%}
+
+
+### Release Transaction
+POST {{rg-host}}/api/transactions/{{transactionId}}/release
+Authorization: {{token_type}} {{access_token}}
+Content-Type: application/json
+api-version: {{transactions-api-version}}
+
+{
+}
+
+### Get Provider Transaction by Ref
+GET {{digicel-host}}/v1/deliver/query_reference/{{moncash-cnfmt-prefix}}{{trackingRef}}
+Authorization: {{digicel-token}}
+Content-Type: application/json
+
+> {%
+    const digicelTransactionToken = response.body['token'];
+    console.log('digicelTransactionToken: ', digicelTransactionToken);
+
+    client.global.set('digicelTransactionToken', digicelTransactionToken);
+%}
+
+### Get Provider Transaction by id
+GET {{digicel-host}}/v1/deliver/query/{{digicelTransactionToken}}
+Authorization: {{digicel-token}}
+Content-Type: application/json

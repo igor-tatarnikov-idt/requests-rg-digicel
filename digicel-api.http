@@ -1,0 +1,65 @@
+### Health check
+GET {{digicel-host}}/remittance/v1/ping
+
+### Non Existing recipient / beneficiary
+GET {{digicel-host}}/remittance/v1/deliver/beneficiary_lookup/HT/50925201000
+Authorization: {{digicel-token}}
+
+### Existing recipient / beneficiary
+GET {{digicel-host}}/remittance/v1/deliver/beneficiary_lookup/HT/50937007055
+Authorization: {{digicel-token}}
+
+### Get Max Send Amount
+GET {{digicel-host}}/remittance/v1/deliver/max_send_amount
+Authorization: {{digicel-token}}
+
+### Get fee info
+GET {{digicel-host}}/remittance/v1/deliver/tax_fee_exchangerate/US/HT/1000
+Authorization: {{digicel-token}}
+
+### Send money
+POST {{digicel-host}}/remittance/v1/deliver/create_and_execute
+Authorization: {{digicel-token}}
+Content-Type: application/json
+
+{
+  "partner_transaction_id": "BRC10203668512680-DEV36",
+  "payout_type": "WALLET",
+  "receiver_amount": "132428",
+  "receiver_country": "HT",
+  "receiver_currency": "HTG",
+  "receiver_name": "John Doe",
+  "receiver_phonenumber": "{{moncash-phonenumber-success}}",
+  "relation_to_sender": "John Doe",
+  "sender_amount": "1000",
+  "sender_country": "US",
+  "sender_currency": "USD",
+  "sender_name": "CLKHAI THIT",
+  "sender_phonenumber": "8858682845"
+}
+
+### Get transaction
+GET {{digicel-host}}/remittance/v1/deliver/query/0abc1482-7cc5-4f64-8bb0-3b087b20584a
+Authorization: {{digicel-token}}
+
+### Get transaction by IDT id
+GET {{digicel-host}}/remittance/v1/deliver/query_reference/IDTBRBPgXmst3wY
+Authorization: {{digicel-token}}
+
+### Cancel transaction by Digicel Token ID
+POST {{digicel-host}}/remittance/v1/deliver/cancel_send
+Authorization: {{digicel-token}}
+Content-Type: application/json
+
+{
+  "token": "224aec28-f711-44dd-94bd-3f4b2f419522"
+}
+
+### Get rates & taxes
+GET {{digicel-host}}/remittance/v1/deliver/tax_fee_exchangerate/US/HT/3000
+Authorization: {{digicel-token}}
+
+> {%
+    const rate = parseFloat(response.body['fx_rate']);
+    client.global.set('moncash-rate', rate.toString());
+%}
