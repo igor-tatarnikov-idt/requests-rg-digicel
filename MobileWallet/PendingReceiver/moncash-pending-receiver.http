@@ -1,7 +1,7 @@
 ### Create transaction
 < {%
     const rate = parseFloat(client.global.get('moncash-rate'));
-    const settlementAmount = 2000;
+    const settlementAmount = 40;
     const receivingAmount = Math.round(settlementAmount * rate);
 
     console.log('receivingAmount: ', receivingAmount);
@@ -52,10 +52,10 @@ api-version: {{transactions-api-version}}
     "state": "CENTRE DEPARTMENT",
     "country": "HTI",
     "city": "HINCHE",
-    "phoneNumber": "{{moncash-phonenumber-pending-review}}",
-    "email": "Allandy.McKinsley@test.com",
-    "firstName": "Allandy",
-    "lastName": "McKinsley"
+    "phoneNumber": "{{moncash-phonenumber-pending-receiver}}",
+    "email": "Albert.Nabere@test.com",
+    "firstName": "Albert",
+    "lastName": "Nabere"
   }
 }
 

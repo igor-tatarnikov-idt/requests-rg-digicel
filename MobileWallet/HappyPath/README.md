@@ -17,6 +17,12 @@ Now run requests one by one. The last two will get you the provider transaction 
 - Beneficiary is _Albert Nadere_ - `OptIn: true` + `Wallet: true`
 - Sending amount is > $2.5
 
+```md
+Beneficiary look-up returns Full Name: Albert, Last Name: Nadere, Optin: true and Wallet: True
+> Remit (Create Token & Execute, or Create Token With Amount, Execute Money Delivery)
+> Success 
+```
+
 ### RG Status History
 
 - Pending

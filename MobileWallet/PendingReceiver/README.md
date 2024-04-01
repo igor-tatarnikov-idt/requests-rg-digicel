@@ -14,14 +14,14 @@ Now run requests one by one. Feel free to cancel just created transaction
 
 ### 3rd Party Notes:
 
-- The `50937007739` recipient phone number is used in non-prod Digicel env
-- Beneficiary is _Allandy McKinsley_ - `OptIn: true` + `Wallet: true`
-- Sending amount is > $1500
+- The `50934483776` recipient phone number is used in non-prod Digicel env
+- Beneficiary is _Albert Nadere_ - `OptIn: true` + `Wallet: true`
+- Sending amount is $40
 
 ```md
-Beneficiary look-up returns Full Name: Allandy, Last Name: McKinsley, Optin: true and Wallet: True,
-the Execute call will return a Pending Review status when exceeding the AML Limits (e.g $1500),
-hit a saction list, hit an aggregation limit or other AML related rule. 
+Beneficairy look-up returns Full Name: Albert,Last Name: Nadere, Optin: true and Wallet: True,
+and send amount example is $1000 >Pending Review or Pending Receiver> return error code when exceeding the Wallet Limits.
+Error shall say: (RECEIVE_AMOUNT_EXCEEDS_WHAT_THE_RECEIVER_CAN_RECEIVE)
 ```
 
 ### RG Status History
