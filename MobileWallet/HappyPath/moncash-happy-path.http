@@ -23,7 +23,7 @@ api-version: {{transactions-api-version}}
     "type": "MobileWallet"
   },
 
-  "trackingRef": "{{$random.alphanumeric(10)}}",
+  "trackingRef": "{{$random.integer(100000)}}",
   "mtoTransactionReference": "{{$random.alphanumeric(14)}}",
 
   "sendingCurrency": "USD",
@@ -101,3 +101,19 @@ Content-Type: application/json
 GET {{digicel-host}}/v1/deliver/query/{{digicelTransactionToken}}
 Authorization: {{digicel-token}}
 Content-Type: application/json
+
+### Validate MobileWallet
+POST {{digicel-adapter-host}}/api/payers/delivery-methods/mobile-wallet/validation
+Authorization: {{token_type}} {{access_token}}
+Content-Type: application/json
+
+{
+  "payerId": "payer-719e8b0c-2d12-4976-9a8a-c72621a14505",
+  "payerBackOfficeId": "DGC-MONCASH-HT-USD",
+  "payer": {
+    "id": "payer-719e8b0c-2d12-4976-9a8a-c72621a14505",
+    "backOfficeId": "DGC-MONCASH-HT-USD",
+    "receivingCountry": "HT"
+  },
+  "phoneNumber": "{{moncash-phonenumber-success}}"
+}

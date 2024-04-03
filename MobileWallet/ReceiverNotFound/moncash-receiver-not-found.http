@@ -1,7 +1,7 @@
 ### Create transaction
 < {%
     const rate = parseFloat(client.global.get('moncash-rate'));
-    const settlementAmount = 2000;
+    const settlementAmount = 8.5;
     const receivingAmount = Math.round(settlementAmount * rate);
 
     console.log('receivingAmount: ', receivingAmount);
@@ -32,8 +32,8 @@ api-version: {{transactions-api-version}}
   "usdSettlementAmount": {{moncash-settlement-amount}},
   "receivingAmount": {{moncash-receiving-amount}},
   "receivingCurrency": "HTG",
-  "buyRate": "{{moncash-rate}}",
-  "sellRate": "{{moncash-rate}}",
+  "buyRate": {{moncash-rate}},
+  "sellRate": {{moncash-rate}},
 
 
   "agent": { "agentId": "RCQASTG" },
@@ -52,10 +52,10 @@ api-version: {{transactions-api-version}}
     "state": "CENTRE DEPARTMENT",
     "country": "HTI",
     "city": "HINCHE",
-    "phoneNumber": "{{moncash-phonenumber-pending-review}}",
-    "email": "Allandy.McKinsley@test.com",
-    "firstName": "Allandy",
-    "lastName": "McKinsley"
+    "phoneNumber": "{{moncash-phonenumber-receiver-not-found}}",
+    "email": "na.na@test.com",
+    "firstName": "NA",
+    "lastName": "NA"
   }
 }
 
@@ -86,32 +86,21 @@ api-version: {{transactions-api-version}}
 }
 
 ### Get Provider Transaction by Ref
-GET {{digicel-host}}/remittance/v1/deliver/query_reference/{{moncash-cnfmt-prefix}}{{trackingRef}}
+GET {{digicel-host}}/v1/deliver/query_reference/{{moncash-cnfmt-prefix}}{{trackingRef}}
 Authorization: {{digicel-token}}
 Content-Type: application/json
 
 > {%
-    const digicelTransactionToken = response.body.token;
+    const digicelTransactionToken = response.body['token'];
     console.log('digicelTransactionToken: ', digicelTransactionToken);
 
     client.global.set('digicelTransactionToken', digicelTransactionToken);
 %}
 
 ### Get Provider Transaction by id
-GET {{digicel-host}}/remittance/v1/deliver/query/{{digicelTransactionToken}}
+GET {{digicel-host}}/v1/deliver/query/{{digicelTransactionToken}}
 Authorization: {{digicel-token}}
 Content-Type: application/json
-
-### Cancel Transaction in RG
-POST {{rg-host}}/api/transactions/{{transactionId}}/cancel
-Authorization: {{token_type}} {{access_token}}
-Content-Type: application/json
-api-version: {{transactions-api-version}}
-
-{
-  "Comment": "test",
-  "ReasonText": "test reason"
-}
 
 ### Validate MobileWallet
 POST {{digicel-adapter-host}}/api/payers/delivery-methods/mobile-wallet/validation
@@ -126,5 +115,5 @@ Content-Type: application/json
     "backOfficeId": "DGC-MONCASH-HT-USD",
     "receivingCountry": "HT"
   },
-  "phoneNumber": "{{moncash-phonenumber-pending-review}}"
+  "phoneNumber": "{{moncash-phonenumber-receiver-not-found}}"
 }
